@@ -9,25 +9,25 @@ import { TimepickerEvent } from './timepicker-event-interface';
     selector: 'datetime',
     template: `
     <div class="form-inline">
-        <div id="{{idDatePicker}}" class="input-group date">
-            <input type="text" class="form-control"
+        <div class="input-group date">
+            <input id="{{idDatePicker}}" type="text" class="form-control"
                    [attr.readonly]="readonly"
                    [attr.required]="required"
                    [attr.placeholder]="datepickerOptions.placeholder || 'Choose date'"
                    [(ngModel)]="dateModel"
                    (keyup)="checkEmptyValue($event)"/>
-            <div class="input-group-addon">
+            <div [hidden]="datepickerOptions.hideIcon || false" class="input-group-addon" (click)="showDatepicker()">
                 <span [ngClass]="datepickerOptions.icon || 'glyphicon glyphicon-th'"></span>
             </div>
         </div>
         <div class="input-group bootstrap-timepicker timepicker">
-            <input id="{{idTimePicker}}" type="text" class="form-control input-small" 
+            <input id="{{idTimePicker}}" type="text" class="form-control input-small"
                    [attr.readonly]="readonly"
                    [attr.required]="required"
                    [attr.placeholder]="timepickerOptions.placeholder || 'Set time'"
                    [(ngModel)]="timeModel"
                    (keyup)="checkEmptyValue($event)">
-            <span class="input-group-addon"><i [ngClass]="timepickerOptions.icon || 'glyphicon glyphicon-time'"></i></span>
+            <span [hidden]="timepickerOptions.hideIcon || false" class="input-group-addon"><i [ngClass]="timepickerOptions.icon || 'glyphicon glyphicon-time'"></i></span>
         </div>
         <button *ngIf="hasClearButton" type="button" (click)="clearModels()">Clear</button>
     </div>
@@ -137,6 +137,10 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
             this.timepicker.timepicker('setTime', null);
         }
         this.updateDatepicker(null);
+    }
+
+    showDatepicker() {
+      this.datepicker.datepicker('show');
     }
 
     //////////////////////////////////
