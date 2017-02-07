@@ -3,6 +3,7 @@ export interface TimepickerEvent {
         value: number, // getTime()
         meridian: string, // AM || PM
         hours: number,
-        minutes: number
+        minutes: number,
+        seconds: number
     }
 }
