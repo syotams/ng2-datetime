@@ -3,35 +3,42 @@ import {
     SimpleChanges, OnChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { TimepickerEvent } from './timepicker-event-interface';
+import { ITimepickerEvent } from './ITimepickerEvent';
 
 @Component({
     selector: 'datetime',
     template: `
-    <div class="form-inline">
-        <div class="input-group date">
-            <input id="{{idDatePicker}}" type="text" class="form-control"
-                   [attr.readonly]="readonly"
-                   [attr.required]="required"
-                   [attr.placeholder]="datepickerOptions.placeholder || 'Choose date'"
-                   [(ngModel)]="dateModel"
-                   (keyup)="checkEmptyValue($event)"/>
-            <div [hidden]="datepickerOptions.hideIcon || false" class="input-group-addon" (click)="showDatepicker()">
-                <span [ngClass]="datepickerOptions.icon || 'glyphicon glyphicon-th'"></span>
+        <div class="form-inline ng2-datetime">
+            <div class="input-group date">
+                <input id="{{idDatePicker}}" type="text" class="form-control"
+                       [attr.readonly]="readonly"
+                       [attr.required]="required"
+                       [attr.placeholder]="datepickerOptions.placeholder || 'Choose date'"
+                       [(ngModel)]="dateModel"
+                       (keyup)="checkEmptyValue($event)"/>
+                <div [hidden]="datepickerOptions.hideIcon || datepickerOptions === false || false"
+                     class="input-group-addon">
+                    <span [ngClass]="datepickerOptions.icon || 'glyphicon glyphicon-th'"></span>
+                </div>
             </div>
+            <div class="input-group bootstrap-timepicker timepicker">
+                <input id="{{idTimePicker}}" type="text" class="form-control input-small"
+                       [attr.readonly]="readonly"
+                       [attr.required]="required"
+                       [attr.placeholder]="timepickerOptions.placeholder || 'Set time'"
+                       [(ngModel)]="timeModel"
+                       (focus)="showTimepicker()"
+                       (keyup)="checkEmptyValue($event)">
+                <span [hidden]="timepickerOptions.hideIcon || false" class="input-group-addon">
+                    <i [ngClass]="timepickerOptions.icon || 'glyphicon glyphicon-time'"></i>
+                </span>
+            </div>
+            <button *ngIf="hasClearButton" type="button" (click)="clearModels()">Clear</button>
         </div>
-        <div class="input-group bootstrap-timepicker timepicker">
-            <input id="{{idTimePicker}}" type="text" class="form-control input-small"
-                   [attr.readonly]="readonly"
-                   [attr.required]="required"
-                   [attr.placeholder]="timepickerOptions.placeholder || 'Set time'"
-                   [(ngModel)]="timeModel"
-                   (keyup)="checkEmptyValue($event)">
-            <span [hidden]="timepickerOptions.hideIcon || false" class="input-group-addon"><i [ngClass]="timepickerOptions.icon || 'glyphicon glyphicon-time'"></i></span>
-        </div>
-        <button *ngIf="hasClearButton" type="button" (click)="clearModels()">Clear</button>
-    </div>
-   `
+    `,
+    styles: [
+        '.ng2-datetime *[hidden] { display: none; }'
+    ]
 })
 
 export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestroy, OnChanges {
@@ -55,9 +62,9 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
 
     @HostListener('dateChange', ['$event'])
     onChange = (_: any) => {
-    };
+    }
     onTouched = () => {
-    };
+    }
 
     constructor(ngControl: NgControl) {
         ngControl.valueAccessor = this; // override valueAccessor
@@ -139,8 +146,8 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
         this.updateDatepicker(null);
     }
 
-    showDatepicker() {
-      this.datepicker.datepicker('show');
+    showTimepicker() {
+        this.timepicker.timepicker('showWidget');
     }
 
     //////////////////////////////////
@@ -171,7 +178,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
             let options = jQuery.extend({ defaultTime: false }, this.timepickerOptions);
             this.timepicker = (<any>$('#' + this.idTimePicker)).timepicker(options);
             this.timepicker
-                .on('changeTime.timepicker', (e: TimepickerEvent) => {
+                .on('changeTime.timepicker', (e: ITimepickerEvent) => {
                     let { meridian, hours } = e.time;
 
                     if (meridian) {
@@ -235,7 +242,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
     }
 }
 
-let id: number = 0;
+let id = 0;
 function uniqueId(prefix: string): string {
     return prefix + ++id;
 }
