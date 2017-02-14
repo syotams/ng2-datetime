@@ -20,7 +20,7 @@
     "tsc": "tsc",
     "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail && npm run tsc && cp .nojekyll dist/"
   },
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/nkalinov/ng2-datetime.git"
