@@ -17,6 +17,7 @@ import { ITimepickerEvent } from './ITimepickerEvent';
                        [(ngModel)]="dateModel"
                        (keyup)="checkEmptyValue($event)"/>
                 <div [hidden]="datepickerOptions.hideIcon || datepickerOptions === false || false"
+                     (click)="showDatepicker()"
                      class="input-group-addon">
                     <span [ngClass]="datepickerOptions.icon || 'glyphicon glyphicon-th'"></span>
                 </div>
@@ -148,6 +149,10 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
 
     showTimepicker() {
         this.timepicker.timepicker('showWidget');
+    }
+
+    showDatepicker() {
+        this.datepicker.datepicker('show');
     }
 
     //////////////////////////////////
