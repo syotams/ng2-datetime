@@ -47,6 +47,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
     @Input('timepicker') timepickerOptions: any = {};
     @Input('datepicker') datepickerOptions: any = {};
     @Input('hasClearButton') hasClearButton: boolean = false;
+    @Input('disabled') disabled: boolean = false;
     @Input() readonly: boolean = null;
     @Input() required: boolean = null;
 
@@ -106,6 +107,14 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
                     this.timepicker.parent().remove();
                 }
             }
+            if (changes['disabled']) {
+                if(this.datepicker) {
+                    this.datepicker.attr('disabled', changes['disabled'].currentValue);
+                }
+                if(this.timepicker) {
+                    this.timepicker.attr('disabled', changes['disabled'].currentValue);
+                }
+            }
         }
     }
 
@@ -159,7 +168,7 @@ export class NKDatetime implements ControlValueAccessor, AfterViewInit, OnDestro
 
     private init(): void {
         if (!this.datepicker && this.datepickerOptions !== false) {
-            let options = jQuery.extend({ enableOnReadonly: !this.readonly }, this.datepickerOptions);
+            let options = jQuery.extend({ enableOnReadonly: !this.readonly, autoclose: true }, this.datepickerOptions);
             this.datepicker = (<any>$('#' + this.idDatePicker)).datepicker(options);
             this.datepicker
                 .on('changeDate', (e: any) => {
